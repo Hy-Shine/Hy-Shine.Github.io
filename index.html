@@ -212,14 +212,10 @@
           <p>本文不对<code>join</code>的数学理论多做介绍，感兴趣的请看<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators">这个</a>。</p>
 <h1 id="为什么要使用join"><a href="#为什么要使用join" class="headerlink" title="为什么要使用join"></a>为什么要使用join</h1><p>在关系型数据库中，多表的关联总是没办法避免使用<code>join</code>。而很多初学者对于<code>SQL</code>中<code>join</code>的用法总是搞不清楚，再加上<code>join</code>中类型有多种，很容易让人搞混这几种<code>join</code>的用法。下面我根据自己的理解，对<code>join</code>的用法做一个简单地介绍。</p>
 <h1 id="join有哪几种类型"><a href="#join有哪几种类型" class="headerlink" title="join有哪几种类型"></a>join有哪几种类型</h1><p>在标准<code>SQL</code>中<code>join</code>共有5种：<code>left</code>、<code>right</code>、<code>full</code>、<code>inner</code>和<code>cross</code>。而这5种可以分为3大类：内连接<code>(inner join)</code>和外连接<code>(outer join)</code>以及交叉连接<code>(cross join)</code>。其中，外连接有3种，分别是：左外连接<code>(left outer join)</code>、右外连接<code>right outer join</code>、全外连接<code>full outer join</code>。</p>
-<blockquote>
-<p>在实际使用中，外连接的<code>outer</code>经常忽略不写</p>
-</blockquote>
+<p><strong>注</strong>：在实际使用中，外连接的<code>outer</code>经常忽略不写</p>
 <h1 id="join的具体使用"><a href="#join的具体使用" class="headerlink" title="join的具体使用"></a>join的具体使用</h1><p>我们先新建两张表：<code>table1</code>和<code>table2</code>，它们的结构如下：</p>
-<blockquote>
-<p>注：本次测试使用的数据库是<code>MySQL8.0</code></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE table table1 (id int, name varchar(5) );</span><br><span class="line">CREATE table table2 (id int, name varchar(5) );</span><br></pre></td></tr></table></figure>
+<p><strong>注</strong>：本次测试使用的数据库是<code>MySQL8.0</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table1 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table2 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br></pre></td></tr></table></figure>
 
 <p>分别向两张表插入少量测试数据，如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">table1				table2</span><br><span class="line">id	name		|	id	name</span><br><span class="line">100	&#x27;A&#x27;		|	100	&#x27;A&#x27;</span><br><span class="line">101	&#x27;B&#x27;		|	101	&#x27;B&#x27;</span><br><span class="line">102	&#x27;C&#x27;		|	102	&#x27;C&#x27;</span><br><span class="line">103	&#x27;D&#x27;		|	103	&#x27;D&#x27;</span><br><span class="line">104	&#x27;E&#x27;		|	106	&#x27;G&#x27;	</span><br><span class="line">105	&#x27;F&#x27;		|	107	&#x27;H&#x27;</span><br></pre></td></tr></table></figure>
@@ -274,7 +270,7 @@
 </li>
 <li><p>左连接<code>(left join)</code></p>
 <p>  在左连接中，左表称为主表，而右表称为副表。不加过滤的情况下，连接不仅会产生符合连接条件的数据，也会全部产生左表的数据。</p>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT t.*,t2.* FROM table1 t</span><br><span class="line">LEFT JOIN table2 t2 ON t.id = t2.id;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> t.<span class="operator">*</span>,t2.<span class="operator">*</span> <span class="keyword">FROM</span> table1 t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> table2 t2 <span class="keyword">ON</span> t.id <span class="operator">=</span> t2.id;</span><br></pre></td></tr></table></figure>
 
 <p>  结果如下：</p>
 <table>
@@ -328,7 +324,7 @@
 <li><p>右连接<code>(right join)</code></p>
 <p>  在了解左连接之后，就很容易懂右连接的用法了。右连接与左连接相反，右表为主表，左表为副表。</p>
 <p>  测试如下：</p>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT t.*,t2.* </span><br><span class="line">FROM table1 t</span><br><span class="line">RIGHT JOIN table2 t2 ON t.id = t2.id;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> t.<span class="operator">*</span>,t2.<span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> table1 t</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> table2 t2 <span class="keyword">ON</span> t.id <span class="operator">=</span> t2.id;</span><br></pre></td></tr></table></figure>
 
 <p>  结果如下：</p>
 <table>
@@ -378,12 +374,10 @@
 </tr>
 </tbody></table>
 <p>  同样地，将代码改成下面这样，也能得到与内连接一样的结果，注意这次是过滤条件是左表的<code>id is not null</code>。</p>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT t.*,t2.* </span><br><span class="line">FROM table1 t</span><br><span class="line">RIGHT JOIN table2 t2 ON t.id = t2.id</span><br><span class="line">WHERE t.id IS NOT NULL;</span><br></pre></td></tr></table></figure></li>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> t.<span class="operator">*</span>,t2.<span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span> table1 t</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> table2 t2 <span class="keyword">ON</span> t.id <span class="operator">=</span> t2.id</span><br><span class="line"><span class="keyword">WHERE</span> t.id <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure></li>
 <li><p>全外连接<code>(full join)</code></p>
 <p>  如果说左连接与右连接是“相反的”，那么全外连接更像是左右连接的”并集“。不仅会输出符合关联条件的数据，左表右表不符合关联条件的数据也会一并给出，只不过对于左、右表中不符合关联条件的数据，对方位置也是以<code>NULL</code>显示的。</p>
-<blockquote>
-<p>目前<code>mysql</code>还不支持全外连接的用法</p>
-</blockquote>
+<p>  <strong>注</strong>：目前<code>mysql</code>还不支持全外连接的用法</p>
 <p>  结果如下：</p>
 <table>
 <thead>
@@ -498,13 +492,6 @@
 
               <time title="Created: 2021-06-08 00:00:03" itemprop="dateCreated datePublished" datetime="2021-06-08T00:00:03+08:00">2021-06-08</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-22 13:22:42" itemprop="dateModified" datetime="2021-06-22T13:22:42+08:00">2021-06-22</time>
-              </span>
 
           
 
