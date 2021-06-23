@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文不对join的数学理论多做介绍，感兴趣的请看这个。 为什么要使用join在关系型数据库中，多表的关联总是没办法避免使用join。而很多初学者对于SQL中join的用法总是搞不清楚，再加上join中类型有多种，很容易让人搞混这几种join的用法。下面我根据自己的理解，对join的用法做一个简单地介绍。 join有哪几种类型在标准SQL中join共有5种：left、right、full、inner">
+  <meta name="description" content="本文不对join的数学理论多做介绍，感兴趣的可以看看维基百科的解释。 为什么要使用join在关系型数据库(RDB)中，多表的关联总是没办法避免使用join。而很多初学者对于SQL中join的用法总是搞不清楚，再加上join中类型有多种，很容易让人搞混这几种join的用法。下面我根据自己的理解，对join的用法做一个简单地介绍。 join有哪几种类型SQL中的join大概有这几种：left、righ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL中的join">
 <meta property="og:url" content="http://example.com/2021/06/10/SQL%E4%B8%AD%E7%9A%84join/index.html">
 <meta property="og:site_name" content="Beaver&#39;s Blog">
-<meta property="og:description" content="本文不对join的数学理论多做介绍，感兴趣的请看这个。 为什么要使用join在关系型数据库中，多表的关联总是没办法避免使用join。而很多初学者对于SQL中join的用法总是搞不清楚，再加上join中类型有多种，很容易让人搞混这几种join的用法。下面我根据自己的理解，对join的用法做一个简单地介绍。 join有哪几种类型在标准SQL中join共有5种：left、right、full、inner">
+<meta property="og:description" content="本文不对join的数学理论多做介绍，感兴趣的可以看看维基百科的解释。 为什么要使用join在关系型数据库(RDB)中，多表的关联总是没办法避免使用join。而很多初学者对于SQL中join的用法总是搞不清楚，再加上join中类型有多种，很容易让人搞混这几种join的用法。下面我根据自己的理解，对join的用法做一个简单地介绍。 join有哪几种类型SQL中的join大概有这几种：left、righ">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-06-10T11:52:17.000Z">
 <meta property="article:modified_time" content="2021-06-10T11:52:17.000Z">
@@ -119,11 +119,6 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
         <li class="menu-item menu-item-categories">
 
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
@@ -132,6 +127,11 @@
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
         <li class="menu-item menu-item-about">
@@ -213,13 +213,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文不对<code>join</code>的数学理论多做介绍，感兴趣的请看<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators">这个</a>。</p>
-<h1 id="为什么要使用join"><a href="#为什么要使用join" class="headerlink" title="为什么要使用join"></a>为什么要使用join</h1><p>在关系型数据库中，多表的关联总是没办法避免使用<code>join</code>。而很多初学者对于<code>SQL</code>中<code>join</code>的用法总是搞不清楚，再加上<code>join</code>中类型有多种，很容易让人搞混这几种<code>join</code>的用法。下面我根据自己的理解，对<code>join</code>的用法做一个简单地介绍。</p>
-<h1 id="join有哪几种类型"><a href="#join有哪几种类型" class="headerlink" title="join有哪几种类型"></a>join有哪几种类型</h1><p>在标准<code>SQL</code>中<code>join</code>共有5种：<code>left</code>、<code>right</code>、<code>full</code>、<code>inner</code>和<code>cross</code>。而这5种可以分为3大类：内连接<code>(inner join)</code>和外连接<code>(outer join)</code>以及交叉连接<code>(cross join)</code>。其中，外连接有3种，分别是：左外连接<code>(left outer join)</code>、右外连接<code>right outer join</code>、全外连接<code>full outer join</code>。</p>
+        <p>本文不对<code>join</code>的数学理论多做介绍，感兴趣的可以看看维基百科的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators">解释</a>。</p>
+<h1 id="为什么要使用join"><a href="#为什么要使用join" class="headerlink" title="为什么要使用join"></a>为什么要使用join</h1><p>在关系型数据库<code>(RDB)</code>中，多表的关联总是没办法避免使用<code>join</code>。而很多初学者对于<code>SQL</code>中<code>join</code>的用法总是搞不清楚，再加上<code>join</code>中类型有多种，很容易让人搞混这几种<code>join</code>的用法。下面我根据自己的理解，对<code>join</code>的用法做一个简单地介绍。</p>
+<h1 id="join有哪几种类型"><a href="#join有哪几种类型" class="headerlink" title="join有哪几种类型"></a>join有哪几种类型</h1><p><code>SQL</code>中的<code>join</code>大概有这几种：<code>left</code>、<code>right</code>、<code>full</code>、<code>inner</code>和<code>cross</code>。而它们又可以分为3大类：内连接<code>(inner join)</code>和外连接<code>(outer join)</code>以及交叉连接<code>(cross join)</code>。其中，外连接有3种，分别是：左外连接<code>(left outer join)</code>、右外连接<code>right outer join</code>、全外连接<code>full outer join</code>。</p>
 <p><strong>注</strong>：在实际使用中，外连接的<code>outer</code>经常忽略不写</p>
 <h1 id="join的具体使用"><a href="#join的具体使用" class="headerlink" title="join的具体使用"></a>join的具体使用</h1><p>我们先新建两张表：<code>table1</code>和<code>table2</code>，它们的结构如下：</p>
 <p><strong>注</strong>：本次测试使用的数据库是<code>MySQL8.0</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table1 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table2 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table1 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table2 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br></pre></td></tr></table></figure>
 
 <p>分别向两张表插入少量测试数据，如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">table1				table2</span><br><span class="line">id	name		|	id	name</span><br><span class="line">100	&#x27;A&#x27;		|	100	&#x27;A&#x27;</span><br><span class="line">101	&#x27;B&#x27;		|	101	&#x27;B&#x27;</span><br><span class="line">102	&#x27;C&#x27;		|	102	&#x27;C&#x27;</span><br><span class="line">103	&#x27;D&#x27;		|	103	&#x27;D&#x27;</span><br><span class="line">104	&#x27;E&#x27;		|	106	&#x27;G&#x27;	</span><br><span class="line">105	&#x27;F&#x27;		|	107	&#x27;H&#x27;</span><br></pre></td></tr></table></figure>
@@ -449,7 +449,7 @@
 </ul>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Join_(SQL)">wikipedia-join</a></li>
-<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/join.html">mysql-join</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/join.html">MySQL 8.0 Reference Manual: JOIN Clause</a></li>
 </ul>
 
     </div>
@@ -470,10 +470,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/08/hello-world/" rel="prev" title="Hello World">
+    <a href="/2021/06/04/hello-world/" rel="prev" title="Hello World">
       <i class="fa fa-chevron-left"></i> Hello World
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/14/golang-set/" rel="next" title="如何自己在Go中实现set">
+      如何自己在Go中实现set <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -546,20 +549,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

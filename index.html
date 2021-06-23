@@ -115,11 +115,6 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
         <li class="menu-item menu-item-categories">
 
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
@@ -128,6 +123,11 @@
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
         <li class="menu-item menu-item-about">
@@ -158,6 +158,93 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/14/golang-set/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/14/golang-set/" class="post-title-link" itemprop="url">如何自己在Go中实现set</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-14 19:53:12" itemprop="dateCreated datePublished" datetime="2021-06-14T19:53:12+08:00">2021-06-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>不像<code>Java</code>、<code>Python</code>等编程语言直接或间接的提供了对<code>set</code>的支持。在<code>Go</code>语言中，内置数据类型并没有提供对集合<code>(set)</code>的支持，但是有相当多的场景下都会用到这种数据类型。这时候，就需要我们自己实现这种类型。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>所谓集合，不过是由相同或不同数据类型不同元素所组成的。</p>
+<p>对于如何实现<code>set</code>，我们可以考虑根据<code>Go</code>语言已有的数据类型，简单的实现<code>set</code>以满足我们的需要。<code>Go</code>语言内置数据类型中有<code>map</code>数据类型，<code>map</code>的底层是依靠的<code>hash</code>实现的，效率非常高，且<code>map</code>数据类型的<code>key</code>是不会重复的，正好这个特性也能满足<code>set</code>元素不重复的特性。由于<code>map</code>数据类型的形式是<code>map[key_type]value_type</code>，即：<code>map</code>是由<code>key-value</code>组成的，而<code>set</code>只包含元素，没有<code>key-value</code>中的<code>value</code>。但是，我们可以考虑使用<code>Go</code>中空结构体<code>struct&#123;&#125;</code>代替<code>value</code>。</p>
+<p>我们先声明一个<code>map</code>变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">struct</span>&#123;&#125;, <span class="number">2</span>)</span><br><span class="line">mySet[<span class="number">1</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">mySet[<span class="number">2</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面虽然使用了空结构体<code>struct&#123;&#125;</code>作为<code>set</code>的”<code>value</code>“，但是使用时要写很多的<code>struct&#123;&#125;&#123;&#125;</code>，这实在不够简约。现在让我们使用<code>none</code>作为空结构体<code>struct&#123;&#125;</code>的别名。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> none <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]none, <span class="number">2</span>)</span><br><span class="line">mySet[<span class="number">10</span>] = none&#123;&#125;</span><br><span class="line">mySet[<span class="number">20</span>] = none&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过以上步骤，基本实现了<code>set</code>的雏形，我们还要做一些收尾工作：定义一个<code>set</code>类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> set <span class="keyword">map</span>[<span class="keyword">int</span>]none</span><br></pre></td></tr></table></figure>
+
+<p>现在我们就可以使用<code>set</code>了，首先来实现一些<code>set</code>的函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(set, N)</span><br><span class="line"><span class="comment">// 获取set的元素个数</span></span><br><span class="line"><span class="comment">// 通过内置函数len也可以达到这个目的</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSetLength</span><span class="params">(mySet set)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(mySet)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断元素是否在集合中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elementInSet</span><span class="params">(mySet set, key key_type)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := mySet[key]; ok &#123;</span><br><span class="line">        <span class="keyword">return</span> ok</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除set中元素操作</span></span><br><span class="line"><span class="comment">// 因为定义的set其实根据map实现的，所以对set的操作遵循对map的操作</span></span><br><span class="line"><span class="comment">// 因此，删除set中元素的操作就是执行删除map中元素的操作，使用内置函数delete就可以</span></span><br><span class="line"><span class="built_in">delete</span>(mySet, key)</span><br><span class="line"><span class="comment">// set新增元素</span></span><br><span class="line"><span class="comment">// 其实，直接执行set[key] = none就能实现set新增元素操作，但还是写一个函数吧。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(mySet set, key key_type)</span> <span class="title">set</span></span> &#123;</span><br><span class="line">    mySet[key] = none&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> mySet</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面只是简单实现了一些关于<code>set</code>操作的函数，其实我们完全可以根据需要实现更多对<code>set</code>的操作和类型。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们算是曲线救国式的实现了<code>set</code>这个缺位的基础数据类型。<code>Go</code>语言相比与其他语言足够的简约，但是<code>set</code>的缺失，仍是让人感觉遗憾的事。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -209,13 +296,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文不对<code>join</code>的数学理论多做介绍，感兴趣的请看<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators">这个</a>。</p>
-<h1 id="为什么要使用join"><a href="#为什么要使用join" class="headerlink" title="为什么要使用join"></a>为什么要使用join</h1><p>在关系型数据库中，多表的关联总是没办法避免使用<code>join</code>。而很多初学者对于<code>SQL</code>中<code>join</code>的用法总是搞不清楚，再加上<code>join</code>中类型有多种，很容易让人搞混这几种<code>join</code>的用法。下面我根据自己的理解，对<code>join</code>的用法做一个简单地介绍。</p>
-<h1 id="join有哪几种类型"><a href="#join有哪几种类型" class="headerlink" title="join有哪几种类型"></a>join有哪几种类型</h1><p>在标准<code>SQL</code>中<code>join</code>共有5种：<code>left</code>、<code>right</code>、<code>full</code>、<code>inner</code>和<code>cross</code>。而这5种可以分为3大类：内连接<code>(inner join)</code>和外连接<code>(outer join)</code>以及交叉连接<code>(cross join)</code>。其中，外连接有3种，分别是：左外连接<code>(left outer join)</code>、右外连接<code>right outer join</code>、全外连接<code>full outer join</code>。</p>
+          <p>本文不对<code>join</code>的数学理论多做介绍，感兴趣的可以看看维基百科的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators">解释</a>。</p>
+<h1 id="为什么要使用join"><a href="#为什么要使用join" class="headerlink" title="为什么要使用join"></a>为什么要使用join</h1><p>在关系型数据库<code>(RDB)</code>中，多表的关联总是没办法避免使用<code>join</code>。而很多初学者对于<code>SQL</code>中<code>join</code>的用法总是搞不清楚，再加上<code>join</code>中类型有多种，很容易让人搞混这几种<code>join</code>的用法。下面我根据自己的理解，对<code>join</code>的用法做一个简单地介绍。</p>
+<h1 id="join有哪几种类型"><a href="#join有哪几种类型" class="headerlink" title="join有哪几种类型"></a>join有哪几种类型</h1><p><code>SQL</code>中的<code>join</code>大概有这几种：<code>left</code>、<code>right</code>、<code>full</code>、<code>inner</code>和<code>cross</code>。而它们又可以分为3大类：内连接<code>(inner join)</code>和外连接<code>(outer join)</code>以及交叉连接<code>(cross join)</code>。其中，外连接有3种，分别是：左外连接<code>(left outer join)</code>、右外连接<code>right outer join</code>、全外连接<code>full outer join</code>。</p>
 <p><strong>注</strong>：在实际使用中，外连接的<code>outer</code>经常忽略不写</p>
 <h1 id="join的具体使用"><a href="#join的具体使用" class="headerlink" title="join的具体使用"></a>join的具体使用</h1><p>我们先新建两张表：<code>table1</code>和<code>table2</code>，它们的结构如下：</p>
 <p><strong>注</strong>：本次测试使用的数据库是<code>MySQL8.0</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table1 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">table</span> table2 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table1 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table2 (id <span class="type">int</span>, name <span class="type">varchar</span>(<span class="number">5</span>) );</span><br></pre></td></tr></table></figure>
 
 <p>分别向两张表插入少量测试数据，如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">table1				table2</span><br><span class="line">id	name		|	id	name</span><br><span class="line">100	&#x27;A&#x27;		|	100	&#x27;A&#x27;</span><br><span class="line">101	&#x27;B&#x27;		|	101	&#x27;B&#x27;</span><br><span class="line">102	&#x27;C&#x27;		|	102	&#x27;C&#x27;</span><br><span class="line">103	&#x27;D&#x27;		|	103	&#x27;D&#x27;</span><br><span class="line">104	&#x27;E&#x27;		|	106	&#x27;G&#x27;	</span><br><span class="line">105	&#x27;F&#x27;		|	107	&#x27;H&#x27;</span><br></pre></td></tr></table></figure>
@@ -445,7 +532,7 @@
 </ul>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Join_(SQL)">wikipedia-join</a></li>
-<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/join.html">mysql-join</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/join.html">MySQL 8.0 Reference Manual: JOIN Clause</a></li>
 </ul>
 
       
@@ -466,7 +553,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/08/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/04/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -480,7 +567,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/08/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+            <a href="/2021/06/04/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
         </h2>
 
         <div class="post-meta">
@@ -490,7 +577,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-08 00:00:03" itemprop="dateCreated datePublished" datetime="2021-06-08T00:00:03+08:00">2021-06-08</time>
+              <time title="Created: 2021-06-04 00:00:03" itemprop="dateCreated datePublished" datetime="2021-06-04T00:00:03+08:00">2021-06-04</time>
             </span>
 
           
@@ -598,20 +685,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
