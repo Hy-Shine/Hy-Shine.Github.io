@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="一个不懂技术，不懂生活，很无聊的人。">
@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/MySQL-count/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/05/cron-jobs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/01/MySQL-count/" class="post-title-link" itemprop="url">MySQL中COUNT函数的解释</a>
+            <a href="/2021/06/05/cron-jobs/" class="post-title-link" itemprop="url">Cron Jobs</a>
         </h2>
 
         <div class="post-meta">
@@ -186,7 +186,82 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-01 20:40:07" itemprop="dateCreated datePublished" datetime="2021-06-01T20:40:07+08:00">2021-06-01</time>
+              <time title="Created: 2021-06-05 19:57:13" itemprop="dateCreated datePublished" datetime="2021-06-05T19:57:13+08:00">2021-06-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文不对<code>Cron Jobs</code>的相关命令做具体的介绍，只是想解释一下使用<code>cron</code>作业调度的时间设置。</p>
+<p>有时，我们会执行一些经常性、周期性的任务，比如：文件备份、发送通知等。但是每次手动操作又十分的繁琐，一般会使用命令或脚本辅助我们完成这些工作。而在<code>Unix-like</code>操作系统中有作业调度命令，可以实现一些作业的定时调度，将这两者结合起来就自动化定时执行这些任务了。</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>作业调度的形式一般像是这样：<code>? ? ? ? ? command_to_execute</code>，其完整的表达式是：</p>
+<p><code>&#123;minute&#125; &#123;hour&#125; &#123;day of month&#125; &#123;month&#125; &#123;day of week&#125; command_to_execute</code></p>
+<p>以下是表达式各部分的具体解释：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># ┌───────────── minute (0 - 59)</span><br><span class="line"># │ ┌───────────── hour (0 - 23)</span><br><span class="line"># │ │ ┌───────────── day of the month (1 - 31)</span><br><span class="line"># │ │ │ ┌───────────── month (1 - 12)</span><br><span class="line"># │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;</span><br><span class="line"># │ │ │ │ │                                   7 is also Sunday on some systems)</span><br><span class="line"># │ │ │ │ │</span><br><span class="line"># │ │ │ │ │</span><br><span class="line"># * * * * * command_to_execute</span><br></pre></td></tr></table></figure>
+
+<p>上面的解释中，<code>*</code>代表所有可能的值，比如：分钟的<code>*</code>表示0-59。其中，对于<code>month</code>和<code>week</code>都可以用英文缩写代替，<code>Week: SUN-SAT</code>代表<code>0-6</code>，<code>JAN-DEC</code>代表<code>1-12</code>月。不过，一般习惯用数字表示。</p>
+<p>现在讲一下，时间设置中常见的几种类型（以<code>minute</code>为例）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1,5,7  <span class="comment"># 表示在1,5,7分钟触发</span></span><br><span class="line">1-5,8-10  <span class="comment"># 表示在1-5,8-10时间段内触发</span></span><br><span class="line">*/N  <span class="comment"># 表示每N分钟触发一次，10/5 则表示从10分钟开始，每5分钟触发一次</span></span><br></pre></td></tr></table></figure>
+
+<p>根据以上解释，现在我们可以写一些作业调度的时间设置了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每10分钟调度一次</span></span><br><span class="line">*/10 * * * * command_to_execute</span><br><span class="line"><span class="comment"># 10月份每周五每小时2分时调度一次</span></span><br><span class="line">2 * * 10 5 command_to_execute</span><br><span class="line"><span class="comment"># 每日5-10,10小时时间段的5分时调度一次</span></span><br><span class="line">5 5-10,15 * * * command_to_execute</span><br></pre></td></tr></table></figure>
+
+<p>推荐一个网站(<a target="_blank" rel="noopener" href="https://crontab.guru/">crontab guru</a>)可以自动帮你更为直观的理解<code>Cron Jobs</code>调度的时间设置 。</p>
+<p><img src="/images/cron-jobs.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>Cron Jobs</code>是一种管理重复性任务的不错的选择，它非常实用，也很容易上手，选择使用正确的命令和时间设置，就可以开启定时执行我们的任务了。</p>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p>[1] <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cron">Wikipedia: cron</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/31/MySQL-count/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/31/MySQL-count/" class="post-title-link" itemprop="url">MySQL中COUNT函数的解释</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-31 20:40:07" itemprop="dateCreated datePublished" datetime="2021-05-31T20:40:07+08:00">2021-05-31</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +291,7 @@
 <p>下面是<code>COUNT</code>函数的具体使用具体：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重，不为NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
 
-<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。在这里要讨论的区别，主要是指性能上的区别。很一些人的印象里，<code>COUNT(1)</code>可能会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。</p>
+<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。在这里要讨论的区别，主要是指性能上的区别。有一些人可能会觉得，<code>COUNT(1)</code>会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。</p>
 <blockquote>
 <p><code>InnoDB</code> handles <code>SELECT COUNT(*)</code> and <code>SELECT COUNT(1)</code> operations in the same way. There is no performance difference.</p>
 </blockquote>
@@ -229,7 +304,7 @@
 <p>  由于 <code>InnoDB</code> 引擎支持事务的特性，数据表中的一行记录，可能有多个版本 (row)，每个版本有自己的 row trx_id。所以，对于<code>InnoDB</code>引擎来说，不同事务中<code>count(?)</code>的结果可能是不一致的。</p>
 </li>
 </ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用了<code>MyISAM</code> 引擎的表， <code>COUNT(*)</code> 速度很快，但是不支持事务，并且含有 <code>where</code> 条件 <code>COUNT</code>与别的引擎没什么不同。<br><code>show table status</code> 命令虽然返回很快，但是结果不够准确<a href="#refer"><sup>[2]</sup></a>。<br>对使用了<code>InnoDB</code> 引擎的表直接 <code>COUNT(*)</code> 的结果很准确，但会遍历全表，可能会导致性能问题。<br><strong>效率对比：</strong>count(*)~count(1)&gt;count(column_x)</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用了<code>MyISAM</code> 引擎的表， <code>COUNT(*)</code> 速度很快，但是<code>MyISAM</code>引擎不支持事务，而且含有 <code>where</code> 条件 <code>COUNT</code>与别的引擎没什么不同。<br><code>show table status</code> 命令虽然返回很快，但是结果不够准确<a href="#refer"><sup>[2]</sup></a>。<br>对使用了<code>InnoDB</code> 引擎的表直接 <code>COUNT(*)</code> 的结果很准确，但会遍历全表，这可能会导致性能问题。<br><strong>效率对比：</strong>count(*)~count(1)&gt;count(column_x)</p>
 <div id="refer"></div>
 
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p>[1] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html#function_count">MySQL 8.0 Reference Manual: Aggregate Function Descriptions - count</a></p>
@@ -621,7 +696,7 @@
 <p>  在标准<code>SQL</code>中，<code>[CROSS|INNER] JOIN</code>在没有使用<code>on</code>的情况下产生的结果都是笛卡尔积，需要使用<code>on</code>对结果进行过滤。</p>
 </li>
 </ul>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Join_(SQL)">wikipedia-join</a></li>
 <li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/join.html">MySQL 8.0 Reference Manual: JOIN Clause</a></li>
 </ul>
@@ -776,7 +851,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -789,7 +864,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
