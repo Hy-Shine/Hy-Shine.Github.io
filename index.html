@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/14/golang-set/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/MySQL-count/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/14/golang-set/" class="post-title-link" itemprop="url">如何自己在Go中实现set</a>
+            <a href="/2021/06/01/MySQL-count/" class="post-title-link" itemprop="url">MySQL中COUNT函数的解释</a>
         </h2>
 
         <div class="post-meta">
@@ -186,7 +186,98 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-14 19:53:12" itemprop="dateCreated datePublished" datetime="2021-06-14T19:53:12+08:00">2021-06-14</time>
+              <time title="Created: 2021-06-01 20:40:07" itemprop="dateCreated datePublished" datetime="2021-06-01T20:40:07+08:00">2021-06-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="COUNT的作用"><a href="#COUNT的作用" class="headerlink" title="COUNT的作用"></a>COUNT的作用</h1><p><code>COUNT</code>函数在数据库可以用来统计行数，可以是表的总行数，也可以用来统计某一列的行数，或者符合条件的结果的行数。现在来看下<code>MySQL</code>官方文档对函数的功能描述：</p>
+<blockquote>
+<p>Returns a count of the number of non-<code>NULL</code> values of <em><code>expr</code></em> in the rows retrieved by a <code>SELECT</code> statement. The result is a <code>BIGINT</code> value. If there are no matching rows, <code>COUNT()</code> returns <code>0</code>.<br><code>COUNT(DISTINCT exp)</code>: Returns a count of the number of rows with different non-NULL <code>expr</code> values.</p>
+</blockquote>
+<p>下面是<code>COUNT</code>函数的具体使用具体：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重，不为NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
+
+<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。在这里要讨论的区别，主要是指性能上的区别。很一些人的印象里，<code>COUNT(1)</code>可能会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。</p>
+<blockquote>
+<p><code>InnoDB</code> handles <code>SELECT COUNT(*)</code> and <code>SELECT COUNT(1)</code> operations in the same way. There is no performance difference.</p>
+</blockquote>
+<h1 id="COUNT函数与存储引擎"><a href="#COUNT函数与存储引擎" class="headerlink" title="COUNT函数与存储引擎"></a>COUNT函数与存储引擎</h1><p>在<code>Innodb</code>存储引擎中，使用<code>COUNT</code>统计行数，内部会使用一个计数器扫描统计。但对于采用了<code>MyISAM</code>存储引擎的表，<code>COUNT(*)</code>的速度非常快，这是因为<code>MySQL</code>可以利用<code>MyISAM</code>的存储引擎特性（<code>MyISAM</code> 引擎把一个表的总行数存在了磁盘上）直接获得这个值，但这也只适用于没有<code>WHERE</code>条件的统计，即<code>SELECT COUNT(*) FROM t</code>，<code>MyISAM</code>在处理使用了过滤条件的统计或统计部分列，其实速度与别的存储引擎并没有什么不同<a href="#refer"><sup>[1]</sup></a>。</p>
+<blockquote>
+<p>For <code>MyISAM</code> tables, <code>COUNT(*)</code> is optimized to return very quickly if the <code>SELECT</code> retrieves <code>FROM</code> one table, no other columns are retrieved, and there is no <code>WHERE</code> clause.</p>
+</blockquote>
+<ul>
+<li><p>如何从事务的角度分析 <code>InnoDB</code> 的 <code>COUNT(?)</code> ？</p>
+<p>  由于 <code>InnoDB</code> 引擎支持事务的特性，数据表中的一行记录，可能有多个版本 (row)，每个版本有自己的 row trx_id。所以，对于<code>InnoDB</code>引擎来说，不同事务中<code>count(?)</code>的结果可能是不一致的。</p>
+</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用了<code>MyISAM</code> 引擎的表， <code>COUNT(*)</code> 速度很快，但是不支持事务，并且含有 <code>where</code> 条件 <code>COUNT</code>与别的引擎没什么不同。<br><code>show table status</code> 命令虽然返回很快，但是结果不够准确<a href="#refer"><sup>[2]</sup></a>。<br>对使用了<code>InnoDB</code> 引擎的表直接 <code>COUNT(*)</code> 的结果很准确，但会遍历全表，可能会导致性能问题。<br><strong>效率对比：</strong>count(*)~count(1)&gt;count(column_x)</p>
+<div id="refer"></div>
+
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p>[1] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html#function_count">MySQL 8.0 Reference Manual: Aggregate Function Descriptions - count</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/show-table-status.html">MySQL 8.0 Reference Manual: SHOW TABLE STATUS Statement</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/22/golang-set/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/22/golang-set/" class="post-title-link" itemprop="url">如何自己在Go中实现set</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-22 19:53:12" itemprop="dateCreated datePublished" datetime="2021-05-22T19:53:12+08:00">2021-05-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -228,8 +319,8 @@
 <p>现在我们就可以使用<code>set</code>了，首先来实现一些<code>set</code>的函数。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(set, N)</span><br><span class="line"><span class="comment">// 获取set的元素个数</span></span><br><span class="line"><span class="comment">// 通过内置函数len也可以达到这个目的</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSetLength</span><span class="params">(mySet set)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(mySet)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断元素是否在集合中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elementInSet</span><span class="params">(mySet set, key key_type)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := mySet[key]; ok &#123;</span><br><span class="line">        <span class="keyword">return</span> ok</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除set中元素操作</span></span><br><span class="line"><span class="comment">// 因为定义的set其实根据map实现的，所以对set的操作遵循对map的操作</span></span><br><span class="line"><span class="comment">// 因此，删除set中元素的操作就是执行删除map中元素的操作，使用内置函数delete就可以</span></span><br><span class="line"><span class="built_in">delete</span>(mySet, key)</span><br><span class="line"><span class="comment">// set新增元素</span></span><br><span class="line"><span class="comment">// 其实，直接执行set[key] = none就能实现set新增元素操作，但还是写一个函数吧。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(mySet set, key key_type)</span> <span class="title">set</span></span> &#123;</span><br><span class="line">    mySet[key] = none&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> mySet</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面只是简单实现了一些关于<code>set</code>操作的函数，其实我们完全可以根据需要实现更多对<code>set</code>的操作和类型。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们算是曲线救国式的实现了<code>set</code>这个缺位的基础数据类型。<code>Go</code>语言相比与其他语言足够的简约，但是<code>set</code>的缺失，仍是让人感觉遗憾的事。</p>
+<p>上面只是简单实现了一些关于<code>set</code>操作的函数，其实我们可以根据需要实现更多对<code>set</code>的操作。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们也算是曲线救国的方式实现了<code>set</code>这个缺位的基础数据类型。虽然<code>Go</code>相比与其他语言足够的简约，但是<code>set</code>的缺失，其实是让人感觉很遗憾的事，使得我们想要使用它，就得以自己的方式实现，并需要实现这个类型相关的函数或方法。</p>
 
       
     </div>
@@ -249,7 +340,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/10/SQL%E4%B8%AD%E7%9A%84join/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/10/SQL%E4%B8%AD%E7%9A%84join/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -263,7 +354,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/10/SQL%E4%B8%AD%E7%9A%84join/" class="post-title-link" itemprop="url">SQL中的join</a>
+            <a href="/2021/05/10/SQL%E4%B8%AD%E7%9A%84join/" class="post-title-link" itemprop="url">SQL中的join</a>
         </h2>
 
         <div class="post-meta">
@@ -273,7 +364,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-10 19:52:17" itemprop="dateCreated datePublished" datetime="2021-06-10T19:52:17+08:00">2021-06-10</time>
+              <time title="Created: 2021-05-10 19:52:17" itemprop="dateCreated datePublished" datetime="2021-05-10T19:52:17+08:00">2021-05-10</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -553,7 +644,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/04/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/04/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -567,7 +658,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/04/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+            <a href="/2021/05/04/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
         </h2>
 
         <div class="post-meta">
@@ -577,7 +668,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-04 00:00:03" itemprop="dateCreated datePublished" datetime="2021-06-04T00:00:03+08:00">2021-06-04</time>
+              <time title="Created: 2021-05-04 00:00:03" itemprop="dateCreated datePublished" datetime="2021-05-04T00:00:03+08:00">2021-05-04</time>
             </span>
 
           
@@ -685,7 +776,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -698,7 +789,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
