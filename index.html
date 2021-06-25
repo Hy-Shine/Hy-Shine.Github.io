@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/11/rdb_date_translate/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/22/SQL%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/beaver.jpg">
@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/11/rdb_date_translate/" class="post-title-link" itemprop="url">关系型数据库日期类型转换</a>
+            <a href="/2021/06/22/SQL%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">SQL代码规范</a>
         </h2>
 
         <div class="post-meta">
@@ -186,7 +186,129 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-11 19:52:17" itemprop="dateCreated datePublished" datetime="2021-06-11T19:52:17+08:00">2021-06-11</time>
+              <time title="Created: 2021-06-22 21:00:01" itemprop="dateCreated datePublished" datetime="2021-06-22T21:00:01+08:00">2021-06-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/" itemprop="url" rel="index"><span itemprop="name">代码规范</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本来想给这篇文章叫<code>SQL</code>编程规范的，感觉大家有把<code>SQL</code>当作编程语言吗？索性叫<code>SQL</code>代码规范好了，废话不多说，下面开始说一下<code>SQL</code>的代码风格。</p>
+<p>对于很多的编程语言来说，大家总有个人的或者通用的代码风格，其实这对于<code>SQL</code>同样也不例外。好的代码风格可以提高代码的可读性，降低维护成本。有些编程语言<code>(Golang)</code>内置了格式化代码命令<code>go fmt</code>，可以非常方便的格式化代码。对于代码的风格，大家的看法总是不尽相同，每个人可能都有自己的风格，如何缩进，怎么变量命名等等。当一种代码风格成为共识之后，我想这才能最大程度上提高代码的可读性、可维护性。</p>
+<h1 id="SQL需要有代码规范吗"><a href="#SQL需要有代码规范吗" class="headerlink" title="SQL需要有代码规范吗"></a>SQL需要有代码规范吗</h1><p>正如上面所说，好的代码风格可以提高代码的可读性。其实，<code>SQL</code>作为一种被经常使用的语言，好的代码规范对<code>SQL</code>使用来说非常重要。我见过很多<code>SQL</code>代码写的很漂亮的，读起来让人赏心悦目；也见过很多糟糕的<code>SQL</code>代码，这种糟糕的代码，让我一半的时间都在理解这到底写的什么。所以，我们也要对<code>SQL</code>的代码规范重视起来，就像重视其他编程语言代码规范那样。</p>
+<h1 id="SQL的代码规范"><a href="#SQL的代码规范" class="headerlink" title="SQL的代码规范"></a>SQL的代码规范</h1><p>我根据自己的喜好及大家经常使用的规范，整理了一份<code>SQL</code>规范，仅供参考。</p>
+<h2 id="编码总体原则"><a href="#编码总体原则" class="headerlink" title="编码总体原则"></a>编码总体原则</h2><ul>
+<li><code>SQL</code>语句应正确、规范、高效</li>
+<li>应避免写较为复杂的<code>SQL</code>语句</li>
+<li>代码要整体层次分明及结构化</li>
+<li>代码中应有必要的注释以增强代码的可读性</li>
+<li>代码应充分考虑数据库性能</li>
+<li>使用<code>SELECT</code>语句时，应指出列名，不应使用列的序号或者用“*”替代所有列名</li>
+<li>如果 <code>SQL</code> 语句连接多表时，应使用表的别名来引用列</li>
+</ul>
+<p>根据编码总体原则，详细说一下<code>SQL</code>的代码规范。</p>
+<h2 id="大小写"><a href="#大小写" class="headerlink" title="大小写"></a>大小写</h2><p><code>SQL</code>中的关键字、内置函数应大写，其余部分（列名、别名、表名等）应小写，以便于理解。不应该出现大小写混着写的情况。</p>
+<p><code>SQL</code>常见的关键字：<code>SELECT</code>,<code>UPDATE</code>,<code>DELETE</code>,<code>INSERT</code>,<code>WHERE</code>,<code>CASE WHEN END</code>,<code>AS</code>,<code>INTO</code>,<code>GROUP BY</code>,<code>HAVING</code>等。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- good sql</span></span><br><span class="line"><span class="keyword">SELECT</span> id <span class="keyword">FROM</span> t</span><br><span class="line"><span class="keyword">SELECT</span> id, <span class="built_in">COUNT</span>(<span class="number">1</span>) cnt <span class="keyword">FROM</span> t <span class="keyword">GROUP</span> <span class="keyword">BY</span> id <span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="number">1</span>)<span class="operator">&gt;</span><span class="number">1</span></span><br><span class="line"><span class="comment">-- bad sql</span></span><br><span class="line"><span class="keyword">select</span> ID <span class="keyword">from</span> T</span><br><span class="line"><span class="keyword">Select</span> Id <span class="keyword">From</span> T</span><br></pre></td></tr></table></figure>
+
+<h2 id="指定列名"><a href="#指定列名" class="headerlink" title="指定列名"></a>指定列名</h2><p>无论是对于查询，插入还是排序等操作，都应指定列名。</p>
+<ul>
+<li><p>查询</p>
+<p>  查询时应避免使用<code>*</code>代替所有列，只指定使用的列名。</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Good sql</span></span><br><span class="line"><span class="keyword">SELECT</span> C1, C2 <span class="keyword">FROM</span> T;</span><br><span class="line"><span class="comment">-- Bad sql</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> T</span><br></pre></td></tr></table></figure></li>
+<li><p>插入</p>
+<p>  使用<code>INSERT</code>语句插入数据时，也应指定列名。</p>
+</li>
+<li><p>排序、分组</p>
+<p>  排序、分组也应遵循指定列名的规定</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Good sql</span></span><br><span class="line"><span class="keyword">SELECT</span> C1, C2 <span class="keyword">FROM</span> T <span class="keyword">ORDER</span> <span class="keyword">BY</span> C1, C2</span><br><span class="line"><span class="comment">-- Bad sql</span></span><br><span class="line"><span class="keyword">SELECT</span> C,C2 <span class="keyword">FROM</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="number">1</span>, <span class="number">2</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>好的<code>SQL</code>编码会添加注释，提高可读性。<code>SQL</code>的注释做以下约定：</p>
+<ul>
+<li>每条<code>SQL</code>语句均应添加注释说明。</li>
+<li>每条<code>SQL</code>语句的注释单独成行，并放在语句的前面。</li>
+<li>字段注释紧跟在字段后面。</li>
+<li>对不易理解的分支条件表达式添加注释。</li>
+<li>对重要的计算添加注释，说明其功能。</li>
+</ul>
+<h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><p><code>SQL</code>中不像其他其他编程语言中，需要大量对变量、函数等对象命名，但是这不意味着命名在写<code>SQL</code>中不重要。<code>sql</code>中有命名情况的有：列别名、表别名、子查询别名等，命名应具有实际的含义且应小写，避免使用中文。太长的命名应使用<code>_</code>隔开，例如：<code>thisIsAColumn</code>，应该这么写<code>this_is_a_column</code>，以提高可读性。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Good sql</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(C1) <span class="keyword">AS</span> cnt</span><br><span class="line"><span class="keyword">FROM</span> T t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">    		<span class="keyword">SELECT</span> id,name </span><br><span class="line">    		<span class="keyword">FROM</span> T2</span><br><span class="line">		) t3 <span class="keyword">ON</span> t.id <span class="operator">=</span> t3.id</span><br><span class="line"><span class="keyword">WHERE</span> t.id <span class="operator">&gt;</span> <span class="number">100</span></span><br><span class="line"><span class="comment">-- Bad sql</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="number">1</span>) <span class="keyword">as</span> 总数</span><br><span class="line"><span class="keyword">FROM</span> T t <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> t2) t3 <span class="keyword">ON</span> t.id <span class="operator">=</span> t3.id</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段排列"><a href="#字段排列" class="headerlink" title="字段排列"></a>字段排列</h2><p><code>SQL</code>中字段应在<code>SELECT</code>后另起一行，且排列应保持对齐，过滤语句中使用了<code>AND</code>或<code>OR</code>，应另起一行。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span>	</span><br><span class="line">	C1,</span><br><span class="line">	C2,</span><br><span class="line">	C3</span><br><span class="line"><span class="keyword">FROM</span> t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 </span><br><span class="line">	<span class="keyword">ON</span> t.id<span class="operator">=</span>t2.id</span><br><span class="line"><span class="keyword">WHERE</span> t.id <span class="operator">&gt;</span> <span class="number">100</span></span><br><span class="line">	<span class="keyword">AND</span> t.name <span class="keyword">LIKE</span> <span class="string">&#x27;%any&#x27;</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> </span><br><span class="line">	t.id,</span><br><span class="line">	t2.name</span><br></pre></td></tr></table></figure>
+
+<h2 id="CASE语句"><a href="#CASE语句" class="headerlink" title="CASE语句"></a>CASE语句</h2><p><code>CASE</code>语句用于<code>SQL</code>中字表达式值的判断，对于<code>CASE</code>语句的代码规范做以下约定：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span> <span class="keyword">WHEN</span> t.id <span class="operator">&gt;=</span> <span class="number">90</span> <span class="keyword">THEN</span> <span class="string">&#x27;Great&#x27;</span></span><br><span class="line">	 <span class="keyword">WHEN</span> t.id <span class="operator">&gt;=</span> <span class="number">60</span> <span class="keyword">THEN</span> <span class="string">&#x27;OK&#x27;</span></span><br><span class="line"><span class="keyword">ELSE</span> <span class="string">&#x27;Bad&#x27;</span> <span class="keyword">END</span> <span class="keyword">AS</span> column_x,</span><br><span class="line"><span class="comment">-- 另一种CASE写法</span></span><br><span class="line"><span class="keyword">CASE</span> expr <span class="keyword">WHEN</span> r1 <span class="keyword">THEN</span> ...</span><br><span class="line">		  <span class="keyword">WHEN</span> r2 <span class="keyword">THEN</span> ...</span><br><span class="line"><span class="keyword">END</span> <span class="keyword">NULL</span> <span class="keyword">END</span> <span class="keyword">AS</span> column_x,</span><br></pre></td></tr></table></figure>
+
+<h2 id="多表关联"><a href="#多表关联" class="headerlink" title="多表关联"></a>多表关联</h2><p><code>sql</code>中多表关联是很常见的，但是对于多表关联的表应使用别名，避免使用产生笛卡尔积的关联操作。关联条件的<code>ON</code>应另起一行且使用缩进。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Good sql</span></span><br><span class="line"><span class="keyword">SELECT</span> t.id, t.name, t2.score</span><br><span class="line"><span class="keyword">FROM</span> table1 t</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> table2 t2 </span><br><span class="line">	<span class="keyword">ON</span> t.id <span class="operator">=</span> t2.id</span><br><span class="line"><span class="comment">-- Bad sql</span></span><br><span class="line"><span class="keyword">SELECT</span> t.id, t.name, t2.score</span><br><span class="line"><span class="keyword">FROM</span> table1 t, table2 t2</span><br><span class="line"><span class="keyword">WHERE</span> t.id <span class="operator">=</span> t2.id</span><br></pre></td></tr></table></figure>
+
+<h2 id="嵌套子查询"><a href="#嵌套子查询" class="headerlink" title="嵌套子查询"></a>嵌套子查询</h2><p><code>SQL</code>中应避免写过于复杂的嵌套子查询，子查询语句应层次分明，结构化强。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">	t.id, </span><br><span class="line">	t.name,</span><br><span class="line">    t.address</span><br><span class="line"><span class="keyword">FROM</span> table1 t</span><br><span class="line"><span class="keyword">WHERE</span> t.id <span class="operator">&gt;</span> <span class="number">100</span></span><br><span class="line">	<span class="keyword">AND</span> t.name <span class="keyword">IN</span> (</span><br><span class="line">        		<span class="keyword">SELECT</span> </span><br><span class="line">        			t2.name</span><br><span class="line">        		<span class="keyword">FROM</span> table2 t2</span><br><span class="line">        		<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> table3 t3</span><br><span class="line">        			<span class="keyword">ON</span> t2.id <span class="operator">=</span> t3.id</span><br><span class="line">        		<span class="keyword">WHERE</span> t2.socre <span class="operator">&gt;</span> <span class="number">90</span></span><br><span class="line">    			)</span><br><span class="line">	<span class="keyword">AND</span> t.address <span class="keyword">NOT</span> <span class="keyword">IN</span> (</span><br><span class="line">        			<span class="keyword">SELECT</span> </span><br><span class="line">        				address</span><br><span class="line">        			<span class="keyword">FROM</span> table4 t4</span><br><span class="line">        			<span class="keyword">WHERE</span> t4.address_status <span class="operator">=</span> <span class="string">&#x27;False&#x27;</span></span><br><span class="line">    				)</span><br><span class="line"> <span class="keyword">ORDER</span> <span class="keyword">BY</span> t.id</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据库性能"><a href="#数据库性能" class="headerlink" title="数据库性能"></a>数据库性能</h2><p><code>SQL</code>编码应考虑数据库性能，考虑执行速度最优原则，<code>SQL</code>代码应尽量使用索引，避免全表扫描。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p>[1] <a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/137491.html">SQL代码编码原则和规范 - DataWorks - 阿里云</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://about.gitlab.com/handbook/business-technology/data-team/platform/sql-style-guide/">Gitlab: SQL Style Guide</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/13/rdb_date_translate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/beaver.jpg">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/13/rdb_date_translate/" class="post-title-link" itemprop="url">关系型数据库日期类型转换</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-13 19:52:17" itemprop="dateCreated datePublished" datetime="2021-06-13T19:52:17+08:00">2021-06-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -959,20 +1081,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
