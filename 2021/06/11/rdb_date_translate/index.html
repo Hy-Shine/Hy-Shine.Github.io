@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在数据库中，日期类型属于最经常使用的类型之一。在很多场景中都会遇到日期类型转换问题，在关系型数据库中日期转换函数有很多，但这些数据库日期转换函数不能通用，接下来就以Oracle、MySQL、SQL Server这3个常见的关系型数据库为例，简单介绍一下日期转换函数的使用。 这3个关系型数据库常见的日期转换函数有：Oracle的TO_DATE和TO_CHAR，MySQL、SQL Server的con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关系型数据库日期类型转换">
+<meta property="og:url" content="http://example.com/2021/06/11/rdb_date_translate/index.html">
+<meta property="og:site_name" content="Beaver&#39;s Blog">
+<meta property="og:description" content="在数据库中，日期类型属于最经常使用的类型之一。在很多场景中都会遇到日期类型转换问题，在关系型数据库中日期转换函数有很多，但这些数据库日期转换函数不能通用，接下来就以Oracle、MySQL、SQL Server这3个常见的关系型数据库为例，简单介绍一下日期转换函数的使用。 这3个关系型数据库常见的日期转换函数有：Oracle的TO_DATE和TO_CHAR，MySQL、SQL Server的con">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-11T11:52:17.000Z">
+<meta property="article:modified_time" content="2021-06-11T11:52:17.000Z">
+<meta property="article:author" content="Beaver">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="sql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/06/11/rdb_date_translate/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>关系型数据库日期类型转换 | Beaver's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Beaver's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/11/rdb_date_translate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/beaver.jpg">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关系型数据库日期类型转换
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-11 19:52:17" itemprop="dateCreated datePublished" datetime="2021-06-11T19:52:17+08:00">2021-06-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在数据库中，日期类型属于最经常使用的类型之一。在很多场景中都会遇到日期类型转换问题，在关系型数据库中日期转换函数有很多，但这些数据库日期转换函数不能通用，接下来就以<code>Oracle</code>、<code>MySQL</code>、<code>SQL Server</code>这3个常见的关系型数据库为例，简单介绍一下日期转换函数的使用。</p>
+<p>这3个关系型数据库常见的日期转换函数有：<code>Oracle</code>的<code>TO_DATE</code>和<code>TO_CHAR</code>，<code>MySQL</code>、<code>SQL Server</code>的<code>convert</code>等函数。</p>
+<h1 id="Oralce日期转换"><a href="#Oralce日期转换" class="headerlink" title="Oralce日期转换"></a>Oralce日期转换</h1><p>在<code>Oracle</code>中，日期转换常用的函数是<code>to_char</code><sup>[1]</sup>和<code>to_date</code><sup>[2]</sup>，一个可以将其日期转换为字符型，另一个可以将字符型转换为日期型。以下是他们的基本语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TO_CHAR(expr, fmt[ ,nlsparam] ) <span class="operator">-</span><span class="operator">&gt;</span> varchar2</span><br><span class="line">TO_DATE(expr, fmt[ ,nlsparam] ) <span class="operator">-</span><span class="operator">&gt;</span> date_type</span><br><span class="line">nlsparam: 用于指定国家日期格式</span><br></pre></td></tr></table></figure>
+
+<p>现在分别讲解一下这两个函数的用法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- TO_CHAR()</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_CHAR(sysdate, <span class="string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_CHAR(sysdate, <span class="string">&#x27;hh24:mi:ss&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 20:15:30</span></span><br><span class="line"><span class="comment">-- TO_DATE()</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;2020-12-23&#x27;</span>, <span class="string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 2020-12-23 00:00:00</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;2020-12-23 12:12:00&#x27;</span>, <span class="string">&#x27;yyyy-mm-dd hh24:mi:ss&#x27;</span>) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="comment">-- 设置了nlsparam的用法</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;January 15, 1989, 11:00 A.M.&#x27;</span>,<span class="string">&#x27;Month dd, YYYY, HH:MI A.M.&#x27;</span>,</span><br><span class="line">     <span class="string">&#x27;NLS_DATE_LANGUAGE = American&#x27;</span>) <span class="keyword">FROM</span> DUAL;</span><br></pre></td></tr></table></figure>
+
+<p>上面只是讲解了这两个函数最常见的一些用法，更详细的用法参见References[1]-[2]。</p>
+<h1 id="SQL-SERVER日期转换"><a href="#SQL-SERVER日期转换" class="headerlink" title="SQL SERVER日期转换"></a>SQL SERVER日期转换</h1><p>在<code>SQL Server</code>中使用的日期转换函数是<code>CONVERT</code><sup>[3]</sup>，其基本语法格式是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CONVERT</span>( type [ (length) ], expression [ , style ] )</span><br></pre></td></tr></table></figure>
+
+<p>语法中<code>length</code>是目标类型的长度，通过长度的设置可以截取我们所需要的格式，而通过<code>style</code>的值实现不同格式的转换（具体使用见References[5]）。</p>
+<p>现在举例讲解一下<code>CONVERT</code>函数在<code>SQL Server</code>中的用法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 日期转字符串</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>(<span class="number">10</span>), GETDATE(), <span class="number">120</span>);  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>, GETDATE(), <span class="number">120</span>);  <span class="comment">-- 2021-06-11 20:25:32</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>, GETDATE(), <span class="number">101</span>);  <span class="comment">-- 06/25/2021</span></span><br><span class="line"><span class="comment">-- 字符串转日期</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(DATETIME, <span class="string">&#x27;2021-10-22&#x27;</span>, <span class="number">101</span>);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">TIME</span>,<span class="string">&#x27;20:20:36&#x27;</span>,<span class="number">114</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>SQL Server</code>中<code>CONVERT</code>函数已经能非常灵活的达到多种格式转换的目的，通过控制<code>type_length</code>及<code>style</code>的值能够获取我们想要的各种格式。</p>
+<h1 id="MySQL日期转换"><a href="#MySQL日期转换" class="headerlink" title="MySQL日期转换"></a>MySQL日期转换</h1><p>在<code>MySQL</code>中实现日期转换操作，可以通过<code>CONVERT</code><sup>[6]</sup>函数实现字符串转日期，通过<code>DATE_FORMAT</code><sup>[3]</sup>实现日期转字符串。</p>
+<p>函数的基本语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- string_to_date</span></span><br><span class="line"><span class="keyword">CONVERT</span>(expr, type)</span><br><span class="line">type: <span class="type">DATE</span>, DATETIME, <span class="type">TIME</span></span><br><span class="line"><span class="comment">-- date_to_string</span></span><br><span class="line">DATE_FORMAT(date_expr, fmt)</span><br><span class="line">fmt:</span><br><span class="line"><span class="operator">%</span>d	<span class="keyword">Day</span> <span class="keyword">of</span> the <span class="keyword">month</span> <span class="keyword">as</span> a <span class="type">numeric</span> <span class="keyword">value</span> (<span class="number">01</span> <span class="keyword">to</span> <span class="number">31</span>)</span><br><span class="line"><span class="operator">%</span>f	Microseconds (<span class="number">000000</span> <span class="keyword">to</span> <span class="number">999999</span>)</span><br><span class="line"><span class="operator">%</span>H	<span class="keyword">Hour</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">23</span>)</span><br><span class="line"><span class="operator">%</span>h	<span class="keyword">Hour</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">12</span>)</span><br><span class="line"><span class="operator">%</span>i	Minutes (<span class="number">00</span> <span class="keyword">to</span> <span class="number">59</span>)</span><br><span class="line"><span class="operator">%</span>M	<span class="keyword">Month</span> name <span class="keyword">in</span> <span class="keyword">full</span> (January <span class="keyword">to</span> December)</span><br><span class="line"><span class="operator">%</span>m	<span class="keyword">Month</span> name <span class="keyword">as</span> a <span class="type">numeric</span> <span class="keyword">value</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">12</span>)</span><br><span class="line"><span class="operator">%</span>S<span class="operator">/</span><span class="operator">%</span>s Seconds (<span class="number">00</span> <span class="keyword">to</span> <span class="number">59</span>)</span><br><span class="line"><span class="operator">%</span>Y	<span class="keyword">Year</span> <span class="keyword">as</span> a <span class="type">numeric</span>, <span class="number">4</span><span class="operator">-</span>digit <span class="keyword">value</span></span><br><span class="line"><span class="operator">%</span>y	<span class="keyword">Year</span> <span class="keyword">as</span> a <span class="type">numeric</span>, <span class="number">2</span><span class="operator">-</span>digit <span class="keyword">value</span></span><br></pre></td></tr></table></figure>
+
+<p>下面举例解释一下这两个函数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- CONVERT</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(&quot;20:13:45&quot;, <span class="type">TIME</span>)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(&quot;2021-03-10&quot;, <span class="type">DATE</span>)</span><br><span class="line"><span class="comment">-- DATE_FORMAT</span></span><br><span class="line"><span class="keyword">SELECT</span> DATE_FORMAT(NOW(), &quot;%Y-%m-%d&quot;);  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> DATE_FORMAT(<span class="string">&#x27;2007-10-04 22:23:00&#x27;</span>, <span class="string">&#x27;%H:%i:%s&#x27;</span>);  <span class="comment">-- &#x27;22:23:00&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>CONVERT</code>函数实现了将时间字符串转成<code>TIME</code>、<code>DATE</code>等类型，<code>DATE_FORMAT</code>函数与<code>Oracle</code>的<code>TO_CHAR</code>用法非常类型，这里就不多做过多的赘述了。</p>
+<h1 id="CAST函数"><a href="#CAST函数" class="headerlink" title="CAST函数"></a>CAST函数</h1><p>其实<code>CAST</code>函数不是一个只用于日期转换的函数，很多类型都可以通过这个函数进行类型转换，比如：字符串转数值型，日期转字符串等。以下是<code>CAST</code>函数的语法知识：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- CAST Syntax:  </span></span><br><span class="line"><span class="built_in">CAST</span> ( expression <span class="keyword">AS</span> data_type [ ( length ) ] )</span><br></pre></td></tr></table></figure>
+
+<p>而且<code>Oracle</code><sup>[5]</sup>、<code>MySQL</code><sup>[6]</sup>、<code>SQL Server</code><sup>[4]</sup>都实现了对<code>CAST</code>函数的支持。但是本文只讲该函数对日期类型转换的操作部分。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Oracle</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(<span class="string">&#x27;22-OCT-1997&#x27;</span> <span class="keyword">AS</span> <span class="type">TIMESTAMP</span> <span class="keyword">WITH</span> <span class="keyword">LOCAL</span> <span class="type">TIME</span> ZONE) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(sysdate <span class="keyword">AS</span> VARCHAR2(<span class="number">30</span>)) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="comment">-- MySQL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(&quot;2017-08-29&quot; <span class="keyword">AS</span> DATETIME);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(&quot;14:06:10&quot; <span class="keyword">AS</span> <span class="type">TIME</span>);</span><br><span class="line"><span class="comment">-- SQL Server</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(<span class="string">&#x27;2014-05-02&#x27;</span> <span class="keyword">AS</span> <span class="type">date</span>); <span class="comment">-- &#x27;2014-05-02&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文简单的介绍了一些常见的关系型数据库涉及日期转换的函数，其中大部分函数可移植性较差，是不能跨数据库使用的，这一点需要注意下。<code>CAST</code>函数将日期类型转换为字符串类型，不能够灵活的格式化。对于函数使用的出处，参见参考文献中官方文档详细的解释。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>[1] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions180.htm">Oracle: TO_CHAR</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions183.htm">Oracle: TO_DATE</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_date-format">MySQL8.0 Date and Time Functions: DATE_FORMAT</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15">CAST 和 CONVERT - SQL Server | Microsoft Docs</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions016.htm">Oracle: CAST Function</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html">MySQL8.0 Cast Functions and Operators</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+              <a href="/tags/sql/" rel="tag"># sql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/05/cron-jobs/" rel="prev" title="Cron Jobs">
+      <i class="fa fa-chevron-left"></i> Cron Jobs
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Oralce%E6%97%A5%E6%9C%9F%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.</span> <span class="nav-text">Oralce日期转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-SERVER%E6%97%A5%E6%9C%9F%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.</span> <span class="nav-text">SQL SERVER日期转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL%E6%97%A5%E6%9C%9F%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">MySQL日期转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CAST%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">CAST函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">5.1.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Beaver"
+      src="/images/beaver.jpg">
+  <p class="site-author-name" itemprop="name">Beaver</p>
+  <div class="site-description" itemprop="description">一个不懂技术，不懂生活，很无聊的人。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Beaver</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

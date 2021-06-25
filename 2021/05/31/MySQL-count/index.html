@@ -170,7 +170,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/31/MySQL-count/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -217,10 +217,11 @@
 <blockquote>
 <p>Returns a count of the number of <code>NON-NULL</code> values of <em><code>expr</code></em> in the rows retrieved by a <code>SELECT</code> statement. The result is a <code>BIGINT</code> value. If there are no matching rows, <code>COUNT()</code> returns <code>0</code>.<br><code>COUNT(DISTINCT exp)</code>: Returns a count of the number of rows with different non-NULL <code>expr</code> values.</p>
 </blockquote>
-<p>下面是<code>COUNT</code>函数的具体使用具体：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重，不为NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：使用<code>COUNT([DISTINCT] expr)</code>统计<code>expr</code>时，统计的是<code>non-null</code>的行数。</p>
+<p>以下是<code>COUNT</code>函数的具体使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
 
-<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。在这里要讨论的区别，主要是指性能上的区别。有一些人可能会觉得，<code>COUNT(1)</code>会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。</p>
+<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。但这里要讨论的区别，主要是指数据库性能上的差异。有些人可能会觉得，<code>COUNT(1)</code>会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。以下是<code>MySQL</code>官方解释：</p>
 <blockquote>
 <p><code>InnoDB</code> handles <code>SELECT COUNT(*)</code> and <code>SELECT COUNT(1)</code> operations in the same way. There is no performance difference.</p>
 </blockquote>
@@ -328,6 +329,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Beaver"
+      src="/images/beaver.jpg">
   <p class="site-author-name" itemprop="name">Beaver</p>
   <div class="site-description" itemprop="description">一个不懂技术，不懂生活，很无聊的人。</div>
 </div>
@@ -336,7 +339,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

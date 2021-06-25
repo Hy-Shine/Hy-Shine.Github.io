@@ -171,7 +171,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/22/golang-set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -234,7 +234,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(set, N)</span><br><span class="line"><span class="comment">// 获取set的元素个数</span></span><br><span class="line"><span class="comment">// 通过内置函数len也可以达到这个目的</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSetLength</span><span class="params">(mySet set)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(mySet)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断元素是否在集合中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elementInSet</span><span class="params">(mySet set, key key_type)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := mySet[key]; ok &#123;</span><br><span class="line">        <span class="keyword">return</span> ok</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除set中元素操作</span></span><br><span class="line"><span class="comment">// 因为定义的set其实根据map实现的，所以对set的操作遵循对map的操作</span></span><br><span class="line"><span class="comment">// 因此，删除set中元素的操作就是执行删除map中元素的操作，使用内置函数delete就可以</span></span><br><span class="line"><span class="built_in">delete</span>(mySet, key)</span><br><span class="line"><span class="comment">// set新增元素</span></span><br><span class="line"><span class="comment">// 其实，直接执行set[key] = none就能实现set新增元素操作，但还是写一个函数吧。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(mySet set, key key_type)</span> <span class="title">set</span></span> &#123;</span><br><span class="line">    mySet[key] = none&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> mySet</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面只是简单实现了一些关于<code>set</code>操作的函数，其实我们可以根据需要实现更多对<code>set</code>的操作。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们也算是曲线救国的方式实现了<code>set</code>这个缺位的基础数据类型。虽然<code>Go</code>相比与其他语言足够的简约，但是<code>set</code>的缺失，其实是让人感觉很遗憾的事，使得我们想要使用它，就得以自己的方式实现，并需要实现这个类型相关的函数或方法。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们算以曲线救国的方式实现了<code>set</code>这个缺失的基础数据类型。虽然<code>Go</code>相比与其他语言足够的简约，设计上的简约可能意味着使用实现上的繁琐，就像<code>set</code>的缺失，其实是让人感觉相当遗憾的事，使得我们想要使用它，就得以自己的方式实现，并需要实现这个类型相关的函数或方法。</p>
 
     </div>
 
@@ -326,6 +326,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Beaver"
+      src="/images/beaver.jpg">
   <p class="site-author-name" itemprop="name">Beaver</p>
   <div class="site-description" itemprop="description">一个不懂技术，不懂生活，很无聊的人。</div>
 </div>
@@ -334,7 +336,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

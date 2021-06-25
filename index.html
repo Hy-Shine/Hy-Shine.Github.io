@@ -162,10 +162,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/11/rdb_date_translate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/beaver.jpg">
+      <meta itemprop="name" content="Beaver">
+      <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Beaver's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/11/rdb_date_translate/" class="post-title-link" itemprop="url">关系型数据库日期类型转换</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-11 19:52:17" itemprop="dateCreated datePublished" datetime="2021-06-11T19:52:17+08:00">2021-06-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在数据库中，日期类型属于最经常使用的类型之一。在很多场景中都会遇到日期类型转换问题，在关系型数据库中日期转换函数有很多，但这些数据库日期转换函数不能通用，接下来就以<code>Oracle</code>、<code>MySQL</code>、<code>SQL Server</code>这3个常见的关系型数据库为例，简单介绍一下日期转换函数的使用。</p>
+<p>这3个关系型数据库常见的日期转换函数有：<code>Oracle</code>的<code>TO_DATE</code>和<code>TO_CHAR</code>，<code>MySQL</code>、<code>SQL Server</code>的<code>convert</code>等函数。</p>
+<h1 id="Oralce日期转换"><a href="#Oralce日期转换" class="headerlink" title="Oralce日期转换"></a>Oralce日期转换</h1><p>在<code>Oracle</code>中，日期转换常用的函数是<code>to_char</code><sup>[1]</sup>和<code>to_date</code><sup>[2]</sup>，一个可以将其日期转换为字符型，另一个可以将字符型转换为日期型。以下是他们的基本语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TO_CHAR(expr, fmt[ ,nlsparam] ) <span class="operator">-</span><span class="operator">&gt;</span> varchar2</span><br><span class="line">TO_DATE(expr, fmt[ ,nlsparam] ) <span class="operator">-</span><span class="operator">&gt;</span> date_type</span><br><span class="line">nlsparam: 用于指定国家日期格式</span><br></pre></td></tr></table></figure>
+
+<p>现在分别讲解一下这两个函数的用法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- TO_CHAR()</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_CHAR(sysdate, <span class="string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_CHAR(sysdate, <span class="string">&#x27;hh24:mi:ss&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 20:15:30</span></span><br><span class="line"><span class="comment">-- TO_DATE()</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;2020-12-23&#x27;</span>, <span class="string">&#x27;yyyy-mm-dd&#x27;</span>) <span class="keyword">FROM</span> dual;  <span class="comment">-- 2020-12-23 00:00:00</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;2020-12-23 12:12:00&#x27;</span>, <span class="string">&#x27;yyyy-mm-dd hh24:mi:ss&#x27;</span>) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="comment">-- 设置了nlsparam的用法</span></span><br><span class="line"><span class="keyword">SELECT</span> TO_DATE(<span class="string">&#x27;January 15, 1989, 11:00 A.M.&#x27;</span>,<span class="string">&#x27;Month dd, YYYY, HH:MI A.M.&#x27;</span>,</span><br><span class="line">     <span class="string">&#x27;NLS_DATE_LANGUAGE = American&#x27;</span>) <span class="keyword">FROM</span> DUAL;</span><br></pre></td></tr></table></figure>
+
+<p>上面只是讲解了这两个函数最常见的一些用法，更详细的用法参见References[1]-[2]。</p>
+<h1 id="SQL-SERVER日期转换"><a href="#SQL-SERVER日期转换" class="headerlink" title="SQL SERVER日期转换"></a>SQL SERVER日期转换</h1><p>在<code>SQL Server</code>中使用的日期转换函数是<code>CONVERT</code><sup>[3]</sup>，其基本语法格式是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CONVERT</span>( type [ (length) ], expression [ , style ] )</span><br></pre></td></tr></table></figure>
+
+<p>语法中<code>length</code>是目标类型的长度，通过长度的设置可以截取我们所需要的格式，而通过<code>style</code>的值实现不同格式的转换（具体使用见References[5]）。</p>
+<p>现在举例讲解一下<code>CONVERT</code>函数在<code>SQL Server</code>中的用法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 日期转字符串</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>(<span class="number">10</span>), GETDATE(), <span class="number">120</span>);  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>, GETDATE(), <span class="number">120</span>);  <span class="comment">-- 2021-06-11 20:25:32</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">VARCHAR</span>, GETDATE(), <span class="number">101</span>);  <span class="comment">-- 06/25/2021</span></span><br><span class="line"><span class="comment">-- 字符串转日期</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(DATETIME, <span class="string">&#x27;2021-10-22&#x27;</span>, <span class="number">101</span>);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(<span class="type">TIME</span>,<span class="string">&#x27;20:20:36&#x27;</span>,<span class="number">114</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>SQL Server</code>中<code>CONVERT</code>函数已经能非常灵活的达到多种格式转换的目的，通过控制<code>type_length</code>及<code>style</code>的值能够获取我们想要的各种格式。</p>
+<h1 id="MySQL日期转换"><a href="#MySQL日期转换" class="headerlink" title="MySQL日期转换"></a>MySQL日期转换</h1><p>在<code>MySQL</code>中实现日期转换操作，可以通过<code>CONVERT</code><sup>[6]</sup>函数实现字符串转日期，通过<code>DATE_FORMAT</code><sup>[3]</sup>实现日期转字符串。</p>
+<p>函数的基本语法格式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- string_to_date</span></span><br><span class="line"><span class="keyword">CONVERT</span>(expr, type)</span><br><span class="line">type: <span class="type">DATE</span>, DATETIME, <span class="type">TIME</span></span><br><span class="line"><span class="comment">-- date_to_string</span></span><br><span class="line">DATE_FORMAT(date_expr, fmt)</span><br><span class="line">fmt:</span><br><span class="line"><span class="operator">%</span>d	<span class="keyword">Day</span> <span class="keyword">of</span> the <span class="keyword">month</span> <span class="keyword">as</span> a <span class="type">numeric</span> <span class="keyword">value</span> (<span class="number">01</span> <span class="keyword">to</span> <span class="number">31</span>)</span><br><span class="line"><span class="operator">%</span>f	Microseconds (<span class="number">000000</span> <span class="keyword">to</span> <span class="number">999999</span>)</span><br><span class="line"><span class="operator">%</span>H	<span class="keyword">Hour</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">23</span>)</span><br><span class="line"><span class="operator">%</span>h	<span class="keyword">Hour</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">12</span>)</span><br><span class="line"><span class="operator">%</span>i	Minutes (<span class="number">00</span> <span class="keyword">to</span> <span class="number">59</span>)</span><br><span class="line"><span class="operator">%</span>M	<span class="keyword">Month</span> name <span class="keyword">in</span> <span class="keyword">full</span> (January <span class="keyword">to</span> December)</span><br><span class="line"><span class="operator">%</span>m	<span class="keyword">Month</span> name <span class="keyword">as</span> a <span class="type">numeric</span> <span class="keyword">value</span> (<span class="number">00</span> <span class="keyword">to</span> <span class="number">12</span>)</span><br><span class="line"><span class="operator">%</span>S<span class="operator">/</span><span class="operator">%</span>s Seconds (<span class="number">00</span> <span class="keyword">to</span> <span class="number">59</span>)</span><br><span class="line"><span class="operator">%</span>Y	<span class="keyword">Year</span> <span class="keyword">as</span> a <span class="type">numeric</span>, <span class="number">4</span><span class="operator">-</span>digit <span class="keyword">value</span></span><br><span class="line"><span class="operator">%</span>y	<span class="keyword">Year</span> <span class="keyword">as</span> a <span class="type">numeric</span>, <span class="number">2</span><span class="operator">-</span>digit <span class="keyword">value</span></span><br></pre></td></tr></table></figure>
+
+<p>下面举例解释一下这两个函数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- CONVERT</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(&quot;20:13:45&quot;, <span class="type">TIME</span>)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONVERT</span>(&quot;2021-03-10&quot;, <span class="type">DATE</span>)</span><br><span class="line"><span class="comment">-- DATE_FORMAT</span></span><br><span class="line"><span class="keyword">SELECT</span> DATE_FORMAT(NOW(), &quot;%Y-%m-%d&quot;);  <span class="comment">-- 2021-06-11</span></span><br><span class="line"><span class="keyword">SELECT</span> DATE_FORMAT(<span class="string">&#x27;2007-10-04 22:23:00&#x27;</span>, <span class="string">&#x27;%H:%i:%s&#x27;</span>);  <span class="comment">-- &#x27;22:23:00&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>CONVERT</code>函数实现了将时间字符串转成<code>TIME</code>、<code>DATE</code>等类型，<code>DATE_FORMAT</code>函数与<code>Oracle</code>的<code>TO_CHAR</code>用法非常类型，这里就不多做过多的赘述了。</p>
+<h1 id="CAST函数"><a href="#CAST函数" class="headerlink" title="CAST函数"></a>CAST函数</h1><p>其实<code>CAST</code>函数不是一个只用于日期转换的函数，很多类型都可以通过这个函数进行类型转换，比如：字符串转数值型，日期转字符串等。以下是<code>CAST</code>函数的语法知识：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- CAST Syntax:  </span></span><br><span class="line"><span class="built_in">CAST</span> ( expression <span class="keyword">AS</span> data_type [ ( length ) ] )</span><br></pre></td></tr></table></figure>
+
+<p>而且<code>Oracle</code><sup>[5]</sup>、<code>MySQL</code><sup>[6]</sup>、<code>SQL Server</code><sup>[4]</sup>都实现了对<code>CAST</code>函数的支持。但是本文只讲该函数对日期类型转换的操作部分。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Oracle</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(<span class="string">&#x27;22-OCT-1997&#x27;</span> <span class="keyword">AS</span> <span class="type">TIMESTAMP</span> <span class="keyword">WITH</span> <span class="keyword">LOCAL</span> <span class="type">TIME</span> ZONE) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(sysdate <span class="keyword">AS</span> VARCHAR2(<span class="number">30</span>)) <span class="keyword">FROM</span> dual;</span><br><span class="line"><span class="comment">-- MySQL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(&quot;2017-08-29&quot; <span class="keyword">AS</span> DATETIME);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(&quot;14:06:10&quot; <span class="keyword">AS</span> <span class="type">TIME</span>);</span><br><span class="line"><span class="comment">-- SQL Server</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">CAST</span>(<span class="string">&#x27;2014-05-02&#x27;</span> <span class="keyword">AS</span> <span class="type">date</span>); <span class="comment">-- &#x27;2014-05-02&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文简单的介绍了一些常见的关系型数据库涉及日期转换的函数，其中大部分函数可移植性较差，是不能跨数据库使用的，这一点需要注意下。<code>CAST</code>函数将日期类型转换为字符串类型，不能够灵活的格式化。对于函数使用的出处，参见参考文献中官方文档详细的解释。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>[1] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions180.htm">Oracle: TO_CHAR</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions183.htm">Oracle: TO_DATE</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_date-format">MySQL8.0 Date and Time Functions: DATE_FORMAT</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15">CAST 和 CONVERT - SQL Server | Microsoft Docs</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions016.htm">Oracle: CAST Function</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/cast-functions.html">MySQL8.0 Cast Functions and Operators</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/05/cron-jobs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -214,7 +318,7 @@
 <p>根据以上解释，现在我们可以写一些作业调度的时间设置了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每10分钟调度一次</span></span><br><span class="line">*/10 * * * * command_to_execute</span><br><span class="line"><span class="comment"># 10月份每周五每小时2分时调度一次</span></span><br><span class="line">2 * * 10 5 command_to_execute</span><br><span class="line"><span class="comment"># 每日5-10,10小时时间段的5分时调度一次</span></span><br><span class="line">5 5-10,15 * * * command_to_execute</span><br></pre></td></tr></table></figure>
 
-<p>推荐一个网站(<a target="_blank" rel="noopener" href="https://crontab.guru/">crontab guru</a>)可以自动帮你更为直观的理解<code>Cron Jobs</code>调度的时间设置 。</p>
+<p>推荐一个网站(<a target="_blank" rel="noopener" href="https://crontab.guru/">crontab guru</a>)可以让你更加直观的理解<code>Cron Jobs</code>调度的时间设置 。</p>
 <img src=/images/cron-jobs.png width="65%">
 
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>Cron Jobs</code>是一种管理重复性任务的不错的选择，它非常实用，也很容易上手，选择使用正确的命令和时间设置，就可以开启定时执行我们的任务了。</p>
@@ -241,7 +345,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/31/MySQL-count/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -289,10 +393,11 @@
 <blockquote>
 <p>Returns a count of the number of <code>NON-NULL</code> values of <em><code>expr</code></em> in the rows retrieved by a <code>SELECT</code> statement. The result is a <code>BIGINT</code> value. If there are no matching rows, <code>COUNT()</code> returns <code>0</code>.<br><code>COUNT(DISTINCT exp)</code>: Returns a count of the number of rows with different non-NULL <code>expr</code> values.</p>
 </blockquote>
-<p>下面是<code>COUNT</code>函数的具体使用具体：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重，不为NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：使用<code>COUNT([DISTINCT] expr)</code>统计<code>expr</code>时，统计的是<code>non-null</code>的行数。</p>
+<p>以下是<code>COUNT</code>函数的具体使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计表的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 统计列的数量</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(COLUMN1) <span class="keyword">FROM</span> T1</span><br><span class="line"><span class="comment">-- 带有过滤条件的统计</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&gt;</span><span class="number">100</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(T1.ID) <span class="keyword">FROM</span> T1,T2 <span class="keyword">WHERE</span> T1.ID<span class="operator">=</span>T2.ID <span class="keyword">AND</span> T1.ID<span class="operator">&lt;</span><span class="number">1000</span>;</span><br><span class="line"><span class="comment">-- DISTINCT去重</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> C1) <span class="keyword">FROM</span> T1;</span><br></pre></td></tr></table></figure>
 
-<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。在这里要讨论的区别，主要是指性能上的区别。有一些人可能会觉得，<code>COUNT(1)</code>会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。</p>
+<h1 id="COUNT-1-VS-COUNT"><a href="#COUNT-1-VS-COUNT" class="headerlink" title="COUNT(1) VS COUNT(*)"></a>COUNT(1) VS COUNT(*)</h1><p><code>COUNT(1)</code>与<code>COUNT(*)</code>在功能上一样，都是用来统计行数。但这里要讨论的区别，主要是指数据库性能上的差异。有些人可能会觉得，<code>COUNT(1)</code>会比<code>COUNT(*)</code>性能更好一些。但是，根据<code>MySQL</code>官方文档的解释，在<code>Innodb</code>存储引擎中，其实二者并没有性能上的差异<a href="#refer"><sup>[1]</sup></a>。以下是<code>MySQL</code>官方解释：</p>
 <blockquote>
 <p><code>InnoDB</code> handles <code>SELECT COUNT(*)</code> and <code>SELECT COUNT(1)</code> operations in the same way. There is no performance difference.</p>
 </blockquote>
@@ -332,7 +437,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/22/golang-set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -396,7 +501,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySet = <span class="built_in">make</span>(set, N)</span><br><span class="line"><span class="comment">// 获取set的元素个数</span></span><br><span class="line"><span class="comment">// 通过内置函数len也可以达到这个目的</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSetLength</span><span class="params">(mySet set)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(mySet)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断元素是否在集合中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elementInSet</span><span class="params">(mySet set, key key_type)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := mySet[key]; ok &#123;</span><br><span class="line">        <span class="keyword">return</span> ok</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 删除set中元素操作</span></span><br><span class="line"><span class="comment">// 因为定义的set其实根据map实现的，所以对set的操作遵循对map的操作</span></span><br><span class="line"><span class="comment">// 因此，删除set中元素的操作就是执行删除map中元素的操作，使用内置函数delete就可以</span></span><br><span class="line"><span class="built_in">delete</span>(mySet, key)</span><br><span class="line"><span class="comment">// set新增元素</span></span><br><span class="line"><span class="comment">// 其实，直接执行set[key] = none就能实现set新增元素操作，但还是写一个函数吧。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(mySet set, key key_type)</span> <span class="title">set</span></span> &#123;</span><br><span class="line">    mySet[key] = none&#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> mySet</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面只是简单实现了一些关于<code>set</code>操作的函数，其实我们可以根据需要实现更多对<code>set</code>的操作。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们也算是曲线救国的方式实现了<code>set</code>这个缺位的基础数据类型。虽然<code>Go</code>相比与其他语言足够的简约，但是<code>set</code>的缺失，其实是让人感觉很遗憾的事，使得我们想要使用它，就得以自己的方式实现，并需要实现这个类型相关的函数或方法。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助<code>Go</code>中的<code>map</code>，我们算以曲线救国的方式实现了<code>set</code>这个缺失的基础数据类型。虽然<code>Go</code>相比与其他语言足够的简约，设计上的简约可能意味着使用实现上的繁琐，就像<code>set</code>的缺失，其实是让人感觉相当遗憾的事，使得我们想要使用它，就得以自己的方式实现，并需要实现这个类型相关的函数或方法。</p>
 
       
     </div>
@@ -419,7 +524,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/10/SQL%E4%B8%AD%E7%9A%84join/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -723,7 +828,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/04/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -844,6 +949,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Beaver"
+      src="/images/beaver.jpg">
   <p class="site-author-name" itemprop="name">Beaver</p>
   <div class="site-description" itemprop="description">一个不懂技术，不懂生活，很无聊的人。</div>
 </div>
@@ -852,7 +959,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

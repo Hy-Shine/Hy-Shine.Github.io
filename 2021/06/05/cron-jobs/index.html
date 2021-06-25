@@ -169,7 +169,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/05/cron-jobs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/beaver.jpg">
       <meta itemprop="name" content="Beaver">
       <meta itemprop="description" content="一个不懂技术，不懂生活，很无聊的人。">
     </span>
@@ -217,7 +217,7 @@
 <p>根据以上解释，现在我们可以写一些作业调度的时间设置了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每10分钟调度一次</span></span><br><span class="line">*/10 * * * * command_to_execute</span><br><span class="line"><span class="comment"># 10月份每周五每小时2分时调度一次</span></span><br><span class="line">2 * * 10 5 command_to_execute</span><br><span class="line"><span class="comment"># 每日5-10,10小时时间段的5分时调度一次</span></span><br><span class="line">5 5-10,15 * * * command_to_execute</span><br></pre></td></tr></table></figure>
 
-<p>推荐一个网站(<a target="_blank" rel="noopener" href="https://crontab.guru/">crontab guru</a>)可以自动帮你更为直观的理解<code>Cron Jobs</code>调度的时间设置 。</p>
+<p>推荐一个网站(<a target="_blank" rel="noopener" href="https://crontab.guru/">crontab guru</a>)可以让你更加直观的理解<code>Cron Jobs</code>调度的时间设置 。</p>
 <img src=/images/cron-jobs.png width="65%">
 
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>Cron Jobs</code>是一种管理重复性任务的不错的选择，它非常实用，也很容易上手，选择使用正确的命令和时间设置，就可以开启定时执行我们的任务了。</p>
@@ -243,7 +243,10 @@
     <a href="/2021/05/31/MySQL-count/" rel="prev" title="MySQL中COUNT函数的解释">
       <i class="fa fa-chevron-left"></i> MySQL中COUNT函数的解释
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/11/rdb_date_translate/" rel="next" title="关系型数据库日期类型转换">
+      关系型数据库日期类型转换 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -308,6 +311,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Beaver"
+      src="/images/beaver.jpg">
   <p class="site-author-name" itemprop="name">Beaver</p>
   <div class="site-description" itemprop="description">一个不懂技术，不懂生活，很无聊的人。</div>
 </div>
@@ -316,7 +321,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
