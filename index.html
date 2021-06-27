@@ -523,7 +523,7 @@
 <blockquote>
 <p><code>InnoDB</code> handles <code>SELECT COUNT(*)</code> and <code>SELECT COUNT(1)</code> operations in the same way. There is no performance difference.</p>
 </blockquote>
-<h1 id="COUNT函数与存储引擎"><a href="#COUNT函数与存储引擎" class="headerlink" title="COUNT函数与存储引擎"></a>COUNT函数与存储引擎</h1><p>在<code>Innodb</code>存储引擎中，使用<code>COUNT</code>统计行数，内部会使用一个计数器扫描统计。但对于采用了<code>MyISAM</code>存储引擎的表，<code>COUNT(*)</code>的速度非常快，这是因为<code>MySQL</code>可以利用<code>MyISAM</code>的存储引擎特性（<code>MyISAM</code> 引擎把一个表的总行数存在了磁盘上）直接获得这个值，但这也只适用于没有<code>WHERE</code>条件的统计，即<code>SELECT COUNT(*) FROM t</code>，<code>MyISAM</code>在处理使用了过滤条件的统计或统计部分列，其实速度与别的存储引擎并没有什么不同<a href="#refer"><sup>[1]</sup></a>。</p>
+<h1 id="COUNT函数与存储引擎"><a href="#COUNT函数与存储引擎" class="headerlink" title="COUNT函数与存储引擎"></a>COUNT函数与存储引擎</h1><p>对于<code>Innodb</code>存储引擎，执行<code>COUNT(*)</code>统计行数，需要对表一行一行的计数统计。但对于采用了<code>MyISAM</code>存储引擎的表，<code>COUNT(*)</code>的速度非常快，这是因为<code>MySQL</code>可以利用<code>MyISAM</code>的存储引擎特性（<code>MyISAM</code> 引擎把一个表的总行数存在了磁盘上）直接获得这个值，但这也只适用于没有<code>WHERE</code>条件的<code>COUNT(*)</code>，即<code>SELECT COUNT(*) FROM t</code>，<code>MyISAM</code>在处理使用了过滤条件的统计或统计部分列，其实速度与别的存储引擎并没有什么不同<a href="#refer"><sup>[1]</sup></a>。</p>
 <blockquote>
 <p>For <code>MyISAM</code> tables, <code>COUNT(*)</code> is optimized to return very quickly if the <code>SELECT</code> retrieves <code>FROM</code> one table, no other columns are retrieved, and there is no <code>WHERE</code> clause.</p>
 </blockquote>
