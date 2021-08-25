@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="tuple和list作为Python中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。 list和tuple基础知识 什么是list和tuple？   实际上，列表和元组都是一个可以放置任意数据类型的有序集合。  他们之间的区别   列表是动态的，长度大小不固定，可以随意地增加、删减或者改变元素。  而元组是静态的，长度大小固定，无法增加删减或者改变。   如果tuple">
+  <meta name="description" content="前言tuple和list作为Python中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。 list和tuple基础知识 什么是list和tuple？   实际上，列表和元组都是一个可以放置任意数据类型的有序集合。  二者的区别   列表是动态的，长度大小不固定，可以随意地增加、删减或者改变元素。  而元组是静态的，长度大小固定，无法增加删减或者改变。   如果tuple">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python中的list和tuple">
 <meta property="og:url" content="http://example.com/2021/08/06/python-list-and-tuple/index.html">
 <meta property="og:site_name" content="Beaver&#39;s Blog">
-<meta property="og:description" content="tuple和list作为Python中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。 list和tuple基础知识 什么是list和tuple？   实际上，列表和元组都是一个可以放置任意数据类型的有序集合。  他们之间的区别   列表是动态的，长度大小不固定，可以随意地增加、删减或者改变元素。  而元组是静态的，长度大小固定，无法增加删减或者改变。   如果tuple">
+<meta property="og:description" content="前言tuple和list作为Python中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。 list和tuple基础知识 什么是list和tuple？   实际上，列表和元组都是一个可以放置任意数据类型的有序集合。  二者的区别   列表是动态的，长度大小不固定，可以随意地增加、删减或者改变元素。  而元组是静态的，长度大小固定，无法增加删减或者改变。   如果tuple">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-08-06T12:46:46.000Z">
-<meta property="article:modified_time" content="2021-08-06T12:46:46.000Z">
+<meta property="article:published_time" content="2021-08-06T12:42:46.000Z">
+<meta property="article:modified_time" content="2021-08-06T12:42:46.000Z">
 <meta property="article:author" content="Beaver">
 <meta property="article:tag" content="Programming">
 <meta property="article:tag" content="data structure">
@@ -102,6 +102,7 @@
       <h1 class="site-title">Beaver's Blog</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
+      <p class="site-subtitle" itemprop="description">Open, Free, </p>
   </div>
 
   <div class="site-nav-right">
@@ -191,7 +192,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-08-06 20:46:46" itemprop="dateCreated datePublished" datetime="2021-08-06T20:46:46+08:00">2021-08-06</time>
+              <time title="Created: 2021-08-06 20:42:46" itemprop="dateCreated datePublished" datetime="2021-08-06T20:42:46+08:00">2021-08-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,16 +219,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><code>tuple</code>和<code>list</code>作为<code>Python</code>中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>tuple</code>和<code>list</code>作为<code>Python</code>中的重要且频繁使用的基础数据类型，我们有必要进一步了解二者之间相同点和差异。</p>
 <h1 id="list和tuple基础知识"><a href="#list和tuple基础知识" class="headerlink" title="list和tuple基础知识"></a>list和tuple基础知识</h1><ul>
 <li><p>什么是list和tuple？</p>
 <p>  实际上，列表和元组都是一个可以放置任意数据类型的有序集合。</p>
 </li>
-<li><p>他们之间的区别</p>
+<li><p>二者的区别</p>
 <p>  列表是动态的，长度大小不固定，可以随意地增加、删减或者改变元素。<br>  而元组是静态的，长度大小固定，无法增加删减或者改变。</p>
 </li>
 </ul>
-<p>如果tuple想要对元素进行增加、删改操作时，需要新创建一个<code>tuple</code>实现这些操作。而<code>list</code>只需使用  <code>append</code>方法，将新的元素添加到列表中，而不会新建一个列表。</p>
+<p>如果tuple想要对元素进行增加、删改操作时，需要新创建一个<code>tuple</code>实现这些操作。而<code>list</code>只需使用<code>append</code>方法，将新的元素添加到列表中，而不会新建一个列表。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">t = (<span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>)</span><br><span class="line">l = [<span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>]</span><br><span class="line"><span class="comment"># adds an element to the tuple</span></span><br><span class="line">t1 = t + (<span class="number">5</span>,)</span><br><span class="line">l.append(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
 
 <p>tuple和list都支持负数索引、切片、嵌套等操作，而且tuple和list还可以通过list()及tuple()相互转换。</p>
@@ -241,15 +242,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">t = (<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">t.__sizeof__()  --&gt;<span class="number">40</span></span><br><span class="line">l = [<span class="number">1</span>,<span class="number">2</span>]</span><br><span class="line">l.__sizeof__()  --&gt;<span class="number">56</span></span><br></pre></td></tr></table></figure>
 
 <p>从上面我们可以看到，tuple和list存储了相同的元素下，list要比tuple多使用16字节的空间。</p>
-<p>由于列表是动态的，所以它需要存储指针，来指向对应的元素（上述例子中，对于int 型，8 字节）。另外，由于列表是可变的，所以需要额外存储已经分配的长度大小（8 bytes），这样才可以实时追踪列表空间的使用情况，当空间不足时，及时分配额外空间。</p>
+<p>由于列表是动态的，所以它需要存储指针，来指向对应的元素(上述例子中，对于int 型，8 bytes)。另外，由于列表是可变的，所以需要额外存储已经分配的长度大小(8 bytes)，这样才可以实时追踪列表空间的使用情况，当空间不足时，及时分配额外空间。</p>
 <p>对于元组而言，由于元组长度大小固定，元素不可变，所以存储空间也是固定的。</p>
-<p>当tuple和list存储的元素越来越多的时候，二者的差异的性能差异将进一步体现。</p>
-<h2 id="性能差异"><a href="#性能差异" class="headerlink" title="性能差异"></a>性能差异</h2><p>通过了解列表和元组存储方式的差异，我们可以得出结论：元组要比列表更加轻量级一些，<br>所以总体上来说，元组的性能速度要略优于列表。</p>
+<p>当tuple和list存储的元素越来越多的时候，二者的差异的性能差异也将进一步体现。</p>
+<h2 id="性能差异"><a href="#性能差异" class="headerlink" title="性能差异"></a>性能差异</h2><p>通过了解列表和元组存储方式的差异，我们可以得出结论：元组要比列表更加轻量级一些，所以总体上来说，元组的性能速度要略优于列表。</p>
 <p>初始化相同元素的tuple和list，tuple速度更快。对于索引操作，二者没有明显差异。</p>
 <p>如果想进行增加、删改操作时，list性能更好。因为这些操作，tuple都必须通过新建tuple实现。</p>
 <h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>经过以上对比，该如何使用哪种类型？具体问题分析。</p>
 <p>如果存储的数据和数量不变，应该选取tuple；如果存储的数据或数量是可变的，应选取list。</p>
-<h2 id="list和tuple的底层实现"><a href="#list和tuple的底层实现" class="headerlink" title="list和tuple的底层实现"></a>list和tuple的底层实现</h2><p>list和tuple的内部实现都是array的形式，list因为可变，所以是一个over-allocate的array，tuple因为不可变，所以长度大小固定</p>
+<h2 id="list和tuple的底层实现"><a href="#list和tuple的底层实现" class="headerlink" title="list和tuple的底层实现"></a>list和tuple的底层实现</h2><p>list和tuple的内部实现都是array的形式，list因为可变，所以是一个over-allocate的array，tuple因为不可变，所以长度大小固定。</p>
 <p>t=list()，t2=[]同样是新建一个列表，二者有什么区别？</p>
 <p>主要在于list()是一个function调用，Python的函数调用会创建stack，并且进行一系列参数检查等操作，有一定的开销，而<code>[]</code>是一个内置的C函数，可以直接被调用，因此效率高。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总的来说，列表和元组都是有序的，可以存储任意数据类型的集合，区别主要在于下面这两点：</p>
@@ -346,7 +347,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#list%E5%92%8Ctuple%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">list和tuple基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#list%E5%92%8Ctuple%E7%9A%84%E5%B8%B8%E8%A7%81%E5%86%85%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">list和tuple的常见内置方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">二者的性能差异和使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tuple%E5%92%8Clist%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">tuple和list的存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82"><span class="nav-number">2.2.</span> <span class="nav-text">性能差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.3.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list%E5%92%8Ctuple%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.</span> <span class="nav-text">list和tuple的底层实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#list%E5%92%8Ctuple%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">list和tuple基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#list%E5%92%8Ctuple%E7%9A%84%E5%B8%B8%E8%A7%81%E5%86%85%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">list和tuple的常见内置方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">二者的性能差异和使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tuple%E5%92%8Clist%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">tuple和list的存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82"><span class="nav-number">3.2.</span> <span class="nav-text">性能差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.3.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list%E5%92%8Ctuple%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.4.</span> <span class="nav-text">list和tuple的底层实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">5.</span> <span class="nav-text">References</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
